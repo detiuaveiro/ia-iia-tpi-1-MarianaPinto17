@@ -25,7 +25,7 @@ class MyTree(SearchTree):
         #IMPLEMENT HERE
         self.open_nodes += lnewnodes
         self.open_nodes.sort(key=lambda x: x.depth-x.offset)
-        #lista = sorted(lnewnodes, key=lambda a: a.depth-a.offset)
+        #lista = sorted(lnewnodes, key=lambda a: a.depth-a.offset) NAO FUNCIONA ASSIM NAO SEI PORQUE :(
     def search2(self):
         # lista por depth, em cada posição adiciona o numero de nos por cada nivel para depois saber o offset de cada um
         # começa com um porque é o do root que tem um no nível, que é ele próprio ()
