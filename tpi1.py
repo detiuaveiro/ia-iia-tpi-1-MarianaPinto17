@@ -30,13 +30,14 @@ class MyTree(SearchTree):
 
     def hybrid2_add_to_open(self,lnewnodes):
         #IMPLEMENT HERE
-        res = []
+        '''
+        lnewnodes.sort(key=lambda x: x.depth-x.offset)
+        self.open_nodes = lnewnodes
+        '''
         for a in lnewnodes:
-            res.append((a.depth - a.offset,a))
-
-        lista = sorted(res,key=lambda tup: tup[0])
-        self.open_nodes.append(lista[1])
-
+            lista = sorted(lnewnodes,key=lambda a: a.depth-a.offset)
+        self.open_nodes = lista
+        
     def search2(self):
         # lista por depth, em cada posição adiciona o numero de filhos para depois saber o offset de cada um, adicionar o len de children para incrementar
         #começa com um porque é o do root que tem um no nível, que é ele próprio 
@@ -69,7 +70,7 @@ class MyTree(SearchTree):
                 nchildren[newnode.depth-1] += len(node.children)
             #o nosso offset é igual ao número de filhos que já existem mais 1
             newnode.offset = nchildren[newnode.depth-1] 
-            print(newnode.offset)
+            #print(newnode.offset)
         return None
 
     def search_from_middle(self):
