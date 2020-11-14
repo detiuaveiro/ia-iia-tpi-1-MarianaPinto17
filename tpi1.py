@@ -1,5 +1,7 @@
 # Mariana Pinto, 84792
 # Discuti com os meus colegas: 90327, 85088, 93023, 89194
+# acedi aos seguintes sites: https://stackoverflow.com/questions/3121979/how-to-sort-a-list-tuple-of-lists-tuples-by-the-element-at-a-given-index
+# 
 
 from tree_search import *
 from cidades import *
@@ -18,24 +20,27 @@ class MyTree(SearchTree):
         super().__init__(problem,strategy)
 
     def hybrid1_add_to_open(self,lnewnodes):
-        #for a in lnewnodes:
+        for a in lnewnodes:
             #se for par adiciona no inicio da lista
-         #   if(lnewnodes.index(a) % 2 == 0):
-         #       self.open_nodes.insert(0,a)
-         #   else:
+           if(lnewnodes.index(a) % 2 == 0):
+               self.open_nodes.insert(0,a)
+           else:
                 #caso contrário no fim da lista
-         #       self.open_nodes.append(a)
-        pass
-    # depth -> pronfudidade
-    # offset -> posicao de cada no no respetivo nivel
+                self.open_nodes.append(a)
+
     def hybrid2_add_to_open(self,lnewnodes):
         #IMPLEMENT HERE
-        #for a in lnewnodes:
-        pass
+        res = []
+        for a in lnewnodes:
+            res.append((a.depth - a.offset,a))
+
+        lista = sorted(res,key=lambda tup: tup[0])
+        self.open_nodes.append(lista[1])
 
     def search2(self):
         # lista por depth, em cada posição adiciona o numero de filhos para depois saber o offset de cada um, adicionar o len de children para incrementar
-        nchildren = []
+        #começa com um porque é o do root que tem um no nível, que é ele próprio 
+        nchildren = [1]
         while self.open_nodes != []:
             node = self.open_nodes.pop(0)
             if self.problem.goal_test(node.state):
@@ -48,8 +53,8 @@ class MyTree(SearchTree):
                 newstate = self.problem.domain.result(node.state,a)
                 if newstate not in self.get_path(node):
                     newnode = MyNode(newstate,node)
-                    newnode.depth+=1
                     node.children.append(newnode)
+                    newnode.depth+=1
                     #newnode.offset=((node.offset+1)*node.offset)
             self.add_to_open(node.children)
             # Guarda em cada posicao da lista o numero de filhos existentes nesse nivel
@@ -63,8 +68,8 @@ class MyTree(SearchTree):
                 #ao valor anterior adicionamos o len de node.children
                 nchildren[newnode.depth-1] += len(node.children)
             #o nosso offset é igual ao número de filhos que já existem mais 1
-            newnode.offset = nchildren[newnode.depth-1] + 1
-            #print(newnode.offset)
+            newnode.offset = nchildren[newnode.depth-1] 
+            print(newnode.offset)
         return None
 
     def search_from_middle(self):
@@ -72,7 +77,6 @@ class MyTree(SearchTree):
         pass
 
 class MinhasCidades(Cidades):
-    
     # state that minimizes heuristic(state1,middle)+heuristic(middle,state2)
     def middle(self,city1,city2):
         rs = []
