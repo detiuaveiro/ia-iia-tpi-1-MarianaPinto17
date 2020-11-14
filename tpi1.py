@@ -79,8 +79,9 @@ class MyTree(SearchTree):
         p2=SearchProblem(self.problem.domain,rs,self.problem.goal)
         # criar a arvore do segundo meio
         self.to_goal=MyTree(p2)
-        # print da solucao
-        print(self.from_init.search() + self.to_goal.search()[1:])
+
+        # return self.from_init.search(), self.to_goal.search()[1:], self.from_init.search() + self.to_goal.search()[1:]
+        return self.from_init.search() + self.to_goal.search()[1:]
 
 class MinhasCidades(Cidades):
     # state that minimizes heuristic(state1,middle)+heuristic(middle,state2)
