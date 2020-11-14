@@ -25,7 +25,7 @@ class MyTree(SearchTree):
         #IMPLEMENT HERE
         self.open_nodes += lnewnodes
         self.open_nodes.sort(key=lambda x: x.depth-x.offset)
-        #lista = sorted(lnewnodes, key=lambda a: a.depth-a.offset) NAO FUNCIONA ASSIM NAO SEI PORQUE :(
+        #self.open_nodes = sorted(lnewnodes, key=lambda a: a.depth-a.offset) NAO FUNCIONA ASSIM NAO SEI PORQUE :(
     def search2(self):
         # lista por depth, em cada posição adiciona o numero de nos por cada nivel para depois saber o offset de cada um
         # começa com um porque é o do root que tem um no nível, que é ele próprio ()
@@ -64,7 +64,9 @@ class MyTree(SearchTree):
 
     def search_from_middle(self):
         #IMPLEMENT HERE
-        pass
+        mid = MinhasCidades.middle(self.problem.initial, self.problem.goal)
+        print(mid)
+        
 
 class MinhasCidades(Cidades):
     # state that minimizes heuristic(state1,middle)+heuristic(middle,state2)
@@ -79,22 +81,29 @@ class MinhasCidades(Cidades):
         return lista[0][1]
 
 class MySTRIPS(STRIPS):
+    
     def result(self, state, action):
+        #para cada precondicao
         for pc in action.pc:
+            # se a pre condicao nao esta no state
             if pc not in state:
                 return None
+        #cria os novos newstates
         newstate = []
+
         for st in state:
             newstate.append(st)
+            #tira-se os negativos
             if st in action.neg:
                 newstate.remove(st) 
         for st in action.pos:
+            #coloca-se os positivos
             newstate.append(st)
         return newstate
 
     #state é uma lista de actions
     def sort(self,state):
-        #faz stor da lista de actions e devolta a lista
+        #faz sorted da lista de actions e devolve a lista
         sorted(state, key=lambda x: x.args)
         return state        
 
