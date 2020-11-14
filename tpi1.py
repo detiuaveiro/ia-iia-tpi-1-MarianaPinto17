@@ -34,6 +34,7 @@ class MyTree(SearchTree):
         pass
 
     def search2(self):
+        # lista por depth, em cada posição adiciona o numero de filhos para depois saber o offset de cada um, adicionar o len de children para incrementar
         nchildren = []
         while self.open_nodes != []:
             node = self.open_nodes.pop(0)
@@ -50,22 +51,20 @@ class MyTree(SearchTree):
                     newnode.depth+=1
                     node.children.append(newnode)
                     #newnode.offset=((node.offset+1)*node.offset)
-                self.add_to_open(node.children)
-            # lista por depth, em cada posição adiciona o numero de filhos para depois saber o offset de cada um, adicionar o len de children para incrementar
+            self.add_to_open(node.children)
             # Guarda em cada posicao da lista o numero de filhos existentes nesse nivel
             # append do numero de filhos de node na posição depth+1
             # se não existe nenhum valor na posicao depth+1
             if len(nchildren) < newnode.depth:
                 #fazemos append
                 nchildren.append(len(node.children))
-                print(nchildren)
             #se existir
             else:
                 #ao valor anterior adicionamos o len de node.children
-                nchildren[newnode.depth-1] += (len(node.children))
+                nchildren[newnode.depth-1] += len(node.children)
             #o nosso offset é igual ao número de filhos que já existem mais 1
-            newnode.offset = nchildren[newnode.depth-1]
-            print(newnode.offset)
+            newnode.offset = nchildren[newnode.depth-1] + 1
+            #print(newnode.offset)
         return None
 
     def search_from_middle(self):
