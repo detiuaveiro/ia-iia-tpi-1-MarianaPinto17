@@ -63,16 +63,23 @@ class MyTree(SearchTree):
         return None
 
     def search_from_middle(self):
-        #print(self.problem.initial)
-        #print(self.problem.goal)
-        #IMPLEMENT HERE
+        # print(self.problem.initial)
+        # print(self.problem.goal)
+        # IMPLEMENT HERE
+        # buscar conexoes e coordenadas do problema
         mc = MinhasCidades(self.problem.domain.connections,self.problem.domain.coordinates)
+        # buscar o middle entre o initial e o goal
         rs = mc.middle(self.problem.initial,self.problem.goal)
-        #print(rs)
+        # print(rs)
+        # fazer o search problem de initial a middle
         p1=SearchProblem(self.problem.domain,self.problem.initial,rs)
+        # cria a arvore para o primeiro meio
         self.from_init=MyTree(p1)
+        # fazer o search do middle a goal
         p2=SearchProblem(self.problem.domain,rs,self.problem.goal)
+        # criar a arvore do segundo meio
         self.to_goal=MyTree(p2)
+        # print da solucao
         print(self.from_init.search() + self.to_goal.search()[1:])
 
 class MinhasCidades(Cidades):
