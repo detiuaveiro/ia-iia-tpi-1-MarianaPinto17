@@ -63,10 +63,17 @@ class MyTree(SearchTree):
         return None
 
     def search_from_middle(self):
+        #print(self.problem.initial)
+        #print(self.problem.goal)
         #IMPLEMENT HERE
-        mid = MinhasCidades.middle(self.problem.initial, self.problem.goal)
-        print(mid)
-        
+        mc = MinhasCidades(self.problem.domain.connections,self.problem.domain.coordinates)
+        rs = mc.middle(self.problem.initial,self.problem.goal)
+        #print(rs)
+        p1=SearchProblem(self.problem.domain,self.problem.initial,rs)
+        self.from_init=MyTree(p1)
+        p2=SearchProblem(self.problem.domain,rs,self.problem.goal)
+        self.to_goal=MyTree(p2)
+        print(self.from_init.search() + self.to_goal.search()[1:])
 
 class MinhasCidades(Cidades):
     # state that minimizes heuristic(state1,middle)+heuristic(middle,state2)
