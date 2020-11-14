@@ -7,13 +7,6 @@ from tree_search import *
 from cidades import *
 from strips import *
 
-class MyNode(SearchNode):
-    #extended method
-    def __init__(self,state,parent):
-        super().__init__(state,parent)
-        self.depth = 0
-        self.offset = 0
-
 class MyTree(SearchTree):
 
     def __init__(self,problem, strategy='breadth'): 
@@ -30,18 +23,15 @@ class MyTree(SearchTree):
 
     def hybrid2_add_to_open(self,lnewnodes):
         #IMPLEMENT HERE
-        '''
-        lnewnodes.sort(key=lambda x: x.depth-x.offset)
-        self.open_nodes = lnewnodes
-        '''
-        for a in lnewnodes:
-            lista = sorted(lnewnodes,key=lambda a: a.depth-a.offset)
-        self.open_nodes = lista
-        
+        self.open_nodes += lnewnodes
+        self.open_nodes.sort(key=lambda x: x.depth-x.offset)
+        #lista = sorted(lnewnodes, key=lambda a: a.depth-a.offset)
     def search2(self):
-        # lista por depth, em cada posição adiciona o numero de filhos para depois saber o offset de cada um, adicionar o len de children para incrementar
-        #começa com um porque é o do root que tem um no nível, que é ele próprio 
+        # lista por depth, em cada posição adiciona o numero de nos por cada nivel para depois saber o offset de cada um
+        # começa com um porque é o do root que tem um no nível, que é ele próprio ()
         nchildren = [1]
+        self.root.depth=0
+        self.root.offset=0
         while self.open_nodes != []:
             node = self.open_nodes.pop(0)
             if self.problem.goal_test(node.state):
@@ -53,23 +43,22 @@ class MyTree(SearchTree):
             for a in self.problem.domain.actions(node.state):
                 newstate = self.problem.domain.result(node.state,a)
                 if newstate not in self.get_path(node):
-                    newnode = MyNode(newstate,node)
+                    newnode = SearchNode(newstate,node)
+                    newnode.depth=node.depth+1
                     node.children.append(newnode)
-                    newnode.depth+=1
-                    #newnode.offset=((node.offset+1)*node.offset)
+                    # Guarda em cada posicao da lista o numero de filhos existentes nesse nivel
+                    # se não existe nenhum valor na posicao depth+1
+                    if len(nchildren) < newnode.depth+1:
+                        #fazemos append de um filho
+                        nchildren.append(1)
+                    #se existir
+                    else:
+                        # ao valor anterior adicionamos o nó que foi criado
+                        nchildren[newnode.depth-1] += 1
+                    #o nosso offset é igual ao número de filhos que já existem mais
+                    newnode.offset = nchildren[newnode.depth-1] 
+                    
             self.add_to_open(node.children)
-            # Guarda em cada posicao da lista o numero de filhos existentes nesse nivel
-            # append do numero de filhos de node na posição depth+1
-            # se não existe nenhum valor na posicao depth+1
-            if len(nchildren) < newnode.depth:
-                #fazemos append
-                nchildren.append(len(node.children))
-            #se existir
-            else:
-                #ao valor anterior adicionamos o len de node.children
-                nchildren[newnode.depth-1] += len(node.children)
-            #o nosso offset é igual ao número de filhos que já existem mais 1
-            newnode.offset = nchildren[newnode.depth-1] 
             #print(newnode.offset)
         return None
 
